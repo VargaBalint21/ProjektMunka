@@ -1,2 +1,2 @@
 backend-terminálba -> composer i -> npm i -> php artisan migrate:fresh --seed -> php artisan serve
-frontend-terminálba -> npm i -> npm run build -> npm run dev
+frontend-terminálba -> npm -> npm i react-router-dom -> npm i bootstrap -> npm run build -> npm run dev

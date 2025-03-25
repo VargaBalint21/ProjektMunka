@@ -1,12 +1,15 @@
 import { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 
 function RegisterForm() {
   const [formData, setFormData] = useState({
-    name: '',
+    first_name: '',
+    last_name:'',
     email: '',
     password: '',
-    password_confirmation: ''
+    password_confirmation: '',
+    phone:'',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -24,7 +27,7 @@ function RegisterForm() {
     
     // Basic validation
     if (formData.password !== formData.password_confirmation) {
-      setError('Passwords do not match');
+      setError('A két jelszó nem egyezik meg');
       return;
     }
     
@@ -36,7 +39,7 @@ function RegisterForm() {
       console.log('Registration successful', response.data);
       // Handle successful registration (e.g., show success message, redirect to login)
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      setError(err.response?.data?.message || 'Sikertelen regisztráció');
     } finally {
       setLoading(false);
     }
@@ -45,12 +48,23 @@ function RegisterForm() {
   return (
     <form className="auth-form" onSubmit={handleSubmit}>
       <div className="form-group">
-        <label htmlFor="name">Name</label>
+        <label htmlFor="last_name">Vezetéknév</label>
         <input
           type="text"
-          id="name"
-          name="name"
-          value={formData.name}
+          id="last_name"
+          name="last_name"
+          value={formData.last_name}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="first_name">Keresztnév</label>
+        <input
+          type="text"
+          id="first_name"
+          name="first_name"
+          value={formData.first_name}
           onChange={handleChange}
           required
         />
@@ -67,7 +81,7 @@ function RegisterForm() {
         />
       </div>
       <div className="form-group">
-        <label htmlFor="register-password">Password</label>
+        <label htmlFor="register-password">Jelszó</label>
         <input
           type="password"
           id="register-password"
@@ -79,7 +93,7 @@ function RegisterForm() {
         />
       </div>
       <div className="form-group">
-        <label htmlFor="password_confirmation">Confirm Password</label>
+        <label htmlFor="password_confirmation">Jelszó megerősítése</label>
         <input
           type="password"
           id="password_confirmation"
@@ -90,9 +104,20 @@ function RegisterForm() {
           minLength="8"
         />
       </div>
+      <div className="form-group">
+        <label htmlFor="phone">Telefonszám</label>
+        <input
+          type="text"
+          id="phone"
+          name="phone"
+          value={formData.phone}
+          onChange={handleChange}
+          required
+        />
+      </div>
       {error && <div className="form-error">{error}</div>}
       <button type="submit" className="form-submit" disabled={loading}>
-        {loading ? 'Registering...' : 'Register'}
+        {loading ? 'Regisztrálás...' : 'Regisztráció'}
       </button>
     </form>
   );

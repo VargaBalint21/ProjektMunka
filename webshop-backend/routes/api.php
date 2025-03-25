@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -15,4 +16,6 @@ Route::get('/users', function () {
     $users = User::all();
     return response()->json($users);
 });
+
+Route::post('/register', [AuthController::class, 'register']);
 
