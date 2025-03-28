@@ -14,9 +14,15 @@ class AuthController extends Controller
         $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'email'=> 'required|string|email|unique:users',
-            'password' => 'required|string|min:8',
-            'phone'=> 'required|string'
+            'email'=> 'required|string|email:dns|unique:users',
+            'password' => 'required|string|min:8|regex:/[A-Z]/|regex:/[a-z]/|regex:/[0-9]/'
+            /*'required',
+            'string',
+            'min:8',
+            'regex:/[A-Z]/',
+            'regex:/[a-z]/',      
+            'regex:/[0-9]/',*/
+         
         ]);
 
         $user = User::create([
@@ -25,6 +31,8 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'phone'=> $request->phone,
+            
+
         ]);
 
         return response()->json(['massage'=> 'Felhasználó sikeresen létrehozva']);

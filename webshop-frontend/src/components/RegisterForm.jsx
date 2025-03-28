@@ -36,7 +36,7 @@ function RegisterForm() {
     try {
       // Replace with your actual registration API endpoint
       const response = await axios.post('http://localhost:8000/api/register', formData);
-      console.log('Registration successful', response.data);
+      alert('Regisztráció sikeres')
       // Handle successful registration (e.g., show success message, redirect to login)
     } catch (err) {
       setError(err.response?.data?.message || 'Sikertelen regisztráció');
