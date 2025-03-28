@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -50,15 +51,16 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
     
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Hibás bejelentkezési adatok'], 401);
+            return response()->json(['message' => 'Hibás email vagy jelszó.'], 401);
         }
     
+       
         $token = $user->createToken('auth_token')->plainTextToken;
     
         return response()->json([
             'message' => 'Sikeres bejelentkezés',
             'token' => $token,
-            'user' => $user,
+            'user' => $user
         ]);
     }
     
