@@ -36,7 +36,30 @@ class AuthController extends Controller
         ]);
 
         return response()->json(['massage'=> 'Felhasználó sikeresen létrehozva']);
+
+        
     }
 
-
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+    
+        $user = User::where('email', $request->email)->first();
+    
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Hibás bejelentkezési adatok'], 401);
+        }
+    
+        $token = $user->createToken('auth_token')->plainTextToken;
+    
+        return response()->json([
+            'message' => 'Sikeres bejelentkezés',
+            'token' => $token,
+            'user' => $user,
+        ]);
+    }
+    
 }
