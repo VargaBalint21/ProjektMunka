@@ -23,7 +23,7 @@ function LoginForm() {
     
     try {
       const response = await axios.post('http://localhost:8000/api/login', formData);
-      console.log('Login successful', response.data);
+      alert('Sikeres bejelentkezés')
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {
