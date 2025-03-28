@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-
 function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +18,7 @@ function Home() {
       })
       .catch(error => {
         console.error('Error fetching products:', error);
-        setError('Failed to load products. Please try again later.');
+        setError('A termékek betöltése nem sikerült. Próbáld újra később.');
         setLoading(false);
       });
   }, []);
@@ -32,7 +31,6 @@ function Home() {
     setActiveAuthTab(tab);
   };
 
-  // Close auth menu when clicking outside of it
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (showAuthMenu && !event.target.closest('.auth-menu') && !event.target.closest('.profile-button')) {
@@ -46,41 +44,42 @@ function Home() {
     };
   }, [showAuthMenu]);
 
-  if (loading) return <div>Loading products...</div>;
-  if (error) return <div className="error">{error}</div>;
+  if (loading) return <div className="text-center mt-5">Betöltés...</div>;
+  if (error) return <div className="alert alert-danger text-center mt-5">{error}</div>;
 
   return (
-    <div>
-      <div className="container">
-        <h1>Our Products</h1>
-        <div className="products-grid">
-          {products.length > 0 ? (
-            products.map(product => (
-              <div className="product-card" key={product.id}>
-                <div className="product-image">
-                  {/* Use a placeholder image if actual image can't be loaded */}
-                  <img
-                    src={`http://localhost:8000/images/${product.image}`}
-                    alt={product.name}
-                    onError={(e) => {
-                      e.target.onerror = null
-                      e.target.src = 'https://placehold.co/300x200?text=Product+Image'
-                    }}
-                  />
-                </div>
-                <div className="product-details">
-                  <h2>{product.name}</h2>
-                  <p className="product-description">{product.description}</p>
-                  <p className="product-price">${(product.price / 100).toFixed(2)}</p>
-                  <p className="product-stock">In stock: {product.stock}</p>
-                  <button className="add-to-cart">Add to Cart</button>
+    <div className="container py-5">
+      <h1 className="mb-4 text-center">Termékeink</h1>
+
+      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {products.length > 0 ? (
+          products.map(product => (
+            <div className="col" key={product.id}>
+              <div className="card h-100 shadow-sm">
+                <img
+                  src={`http://localhost:8000/images/${product.image}`}
+                  className="card-img-top"
+                  alt={product.name}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://placehold.co/300x200?text=Product+Image';
+                  }}
+                />
+                <div className="card-body d-flex flex-column">
+                  <h5 className="card-title">{product.name}</h5>
+                  <p className="card-text">{product.description}</p>
+                  <p className="card-text fw-bold text-primary">
+                    ${(product.price / 100).toFixed(2)}
+                  </p>
+                  <p className="card-text text-muted">Készleten: {product.stock}</p>
+                  <button className="btn btn-success mt-auto">Kosárba</button>
                 </div>
               </div>
-            ))
-          ) : (
-            <div>No products found</div>
-          )}
-        </div>
+            </div>
+          ))
+        ) : (
+          <div className="col-12 text-center">Nincsenek elérhető termékek.</div>
+        )}
       </div>
     </div>
   );
