@@ -4,7 +4,6 @@ import Layout from "./components/Layout.Jsx";
 import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
 import 'bootstrap/dist/css/bootstrap.css';
-import { AuthProvider } from './context/AuthContext';
 export default function App(){
   return(
     <>
@@ -19,9 +18,7 @@ export default function App(){
         </Route>
       </Routes>
     </BrowserRouter>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    
     </>
   );
 };
