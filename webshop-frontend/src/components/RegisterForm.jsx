@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { Navigate, useNavigate } from 'react-router-dom'
 
 function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -33,7 +34,13 @@ function RegisterForm() {
     
     try {
       const response = await axios.post('http://localhost:8000/api/register', formData);
-      alert('Regisztráció sikeres');
+      setSuccess('Sikeres regisztráció! Átirányítás a bejelentkezéshez...');
+
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+
+      
     } catch (err) {
       setError(err.response?.data?.message || 'Sikertelen regisztráció');
     } finally {

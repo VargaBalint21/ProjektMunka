@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function LoginForm() {
   const [formData, setFormData] = useState({
@@ -8,6 +9,7 @@ function LoginForm() {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -23,9 +25,16 @@ function LoginForm() {
     
     try {
       const response = await axios.post('http://localhost:8000/api/login', formData);
-      alert('Sikeres bejelentkezés')
+      const { token, user } = response.data;
+
+      // Token és név mentése
+      localStorage.setItem('token', token);
+      localStorage.setItem('first_name', user.first_name);
+
+      
+      navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      setError(err.response?.data?.message || 'Sikertelen bejelentkezés');
     } finally {
       setLoading(false);
     }
