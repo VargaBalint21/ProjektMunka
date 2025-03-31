@@ -1,13 +1,21 @@
-import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 
 const Layout = () => {
   const navigate = useNavigate();
-  const firstName = localStorage.getItem('first_name');
+  const location = useLocation(); 
+  const [firstName, setFirstName] = useState(localStorage.getItem('first_name'));
+
+  useEffect(() => {
+    
+    setFirstName(localStorage.getItem('first_name'));
+  }, [location]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('first_name');
+    setFirstName(null); 
     navigate('/login');
   };
 
@@ -20,10 +28,10 @@ const Layout = () => {
             {firstName ? (
               <>
                 <li className="nav-item d-flex align-items-center">
-                  <span className="nav-link">Szia, {firstName}!</span>
+                  <Link className="nav-link" to="/profile">Szia, {firstName}!</Link>
                 </li>
                 <li className="nav-item">
-                  <button className="btn btn-outline-ligh" onClick={handleLogout}>
+                  <button className="btn btn-outline-light" onClick={handleLogout}>
                     Kijelentkezés
                   </button>
                 </li>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Models\User;
@@ -19,3 +20,11 @@ Route::get('/users', function () {
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/profile/address', [AddressController::class, 'show']);
+    Route::post('/profile/address', [AddressController::class, 'store']);
+});
+Route::middleware('auth:sanctum')->get('/profile', function () {
+    return auth()->user();
+});
