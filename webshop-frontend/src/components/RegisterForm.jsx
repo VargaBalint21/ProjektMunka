@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -11,7 +12,10 @@ function RegisterForm() {
     phone: '',
   });
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -23,6 +27,7 @@ function RegisterForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
 
     if (formData.password !== formData.password_confirmation) {
       setError('A két jelszó nem egyezik meg');
@@ -30,10 +35,14 @@ function RegisterForm() {
     }
 
     setLoading(true);
-    
+
     try {
       const response = await axios.post('http://localhost:8000/api/register', formData);
-      alert('Regisztráció sikeres');
+      setSuccess('Sikeres regisztráció! Átirányítás a bejelentkezéshez...');
+      
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
     } catch (err) {
       setError(err.response?.data?.message || 'Sikertelen regisztráció');
     } finally {
@@ -69,7 +78,10 @@ function RegisterForm() {
           <label htmlFor="phone" className="form-label">Telefonszám</label>
           <input type="text" className="form-control" id="phone" name="phone" value={formData.phone} onChange={handleChange} required />
         </div>
+
         {error && <div className="alert alert-danger">{error}</div>}
+        {success && <div className="alert alert-success">{success}</div>}
+
         <button type="submit" className="btn btn-success" disabled={loading}>
           {loading ? 'Regisztrálás...' : 'Regisztráció'}
         </button>
