@@ -2,10 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+
 Route::get('/', function () {
-    return view('welcome');
+    return response()->json(['message' => 'API elérhető']);
 });
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

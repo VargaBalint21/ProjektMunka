@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -27,4 +28,9 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 Route::middleware('auth:sanctum')->get('/profile', function () {
     return auth()->user();
+});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/cart', [CartController::class, 'index']);
+    Route::post('/cart', [CartController::class, 'store']);
+    Route::delete('/cart/{id}', [CartController::class, 'destroy']);
 });

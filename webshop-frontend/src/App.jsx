@@ -5,6 +5,7 @@ import RegisterForm from "./components/RegisterForm";
 import LoginForm from "./components/LoginForm";
 import ProfilePage from "./components/ProfilePage";
 import 'bootstrap/dist/css/bootstrap.css';
+import CartPage from "./components/CartPage";
 export default function App(){
   return(
     <>
@@ -15,6 +16,7 @@ export default function App(){
           <Route path="register" element={<RegisterForm />} />
           <Route path="login" element={<LoginForm/>} />
           <Route path="profile" element={<ProfilePage />} />
+          <Route path="/cart" element={<CartPage />} />
           
 
         </Route>

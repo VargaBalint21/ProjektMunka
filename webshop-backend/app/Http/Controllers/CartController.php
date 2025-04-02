@@ -3,64 +3,46 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
-use App\Http\Requests\StoreCartRequest;
-use App\Http\Requests\UpdateCartRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $user = Auth::user();
+
+        $cartItems = Cart::with('product')
+            ->where('user_id', $user->id)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->product_id,
+                    'name' => $item->product->name,
+                    'price' => $item->product->price,
+                    'quantity' => $item->quantity,
+                ];
+            });
+
+        return response()->json($cartItems);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function syncCart(Request $request)
     {
-        //
-    }
+        $user = Auth::user();
+        $items = $request->input('items', []);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreCartRequest $request)
-    {
-        //
-    }
+        Cart::where('user_id', $user->id)->delete();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Cart $cart)
-    {
-        //
-    }
+        foreach ($items as $item) {
+            Cart::create([
+                'user_id' => $user->id,
+                'product_id' => $item['id'],
+                'quantity' => $item['quantity'],
+                'shopping_session_id' => null,
+            ]);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Cart $cart)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCartRequest $request, Cart $cart)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Cart $cart)
-    {
-        //
+        return response()->json(['message' => 'Kosár szinkronizálva']);
     }
 }
