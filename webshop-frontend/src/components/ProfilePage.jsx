@@ -13,7 +13,7 @@ function ProfilePage() {
   const [message, setMessage] = useState('');
   const token = localStorage.getItem('token');
 
-  
+  // Felhasználó és cím lekérése
   useEffect(() => {
     axios.get('http://localhost:8000/api/profile', {
       headers: { Authorization: `Bearer ${token}` }

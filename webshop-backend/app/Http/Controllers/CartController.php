@@ -3,45 +3,64 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreCartRequest;
+use App\Http\Requests\UpdateCartRequest;
 
 class CartController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        $user = Auth::user();
-
-        $cartItems = Cart::with('product')
-            ->where('user_id', $user->id)
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'id' => $item->product_id,
-                    'name' => $item->product->name,
-                    'price' => $item->product->price,
-                    'quantity' => $item->quantity,
-                ];
-            });
-
-        return response()->json($cartItems);
+        //
     }
 
-    public function syncCart(Request $request)
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
     {
-        $user = Auth::user();
-        $items = $request->input('items', []);
+        //
+    }
 
-        Cart::where('user_id', $user->id)->delete();
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(StoreCartRequest $request)
+    {
+        //
+    }
 
-        foreach ($items as $item) {
-            Cart::create([
-                'user_id' => $user->id,
-                'product_id' => $item['id'],
-                'quantity' => $item['quantity'],
-            ]);
-        }
+    /**
+     * Display the specified resource.
+     */
+    public function show(Cart $cart)
+    {
+        //
+    }
 
-        return response()->json(['message' => 'Kosár szinkronizálva']);
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Cart $cart)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateCartRequest $request, Cart $cart)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Cart $cart)
+    {
+        //
     }
 }
