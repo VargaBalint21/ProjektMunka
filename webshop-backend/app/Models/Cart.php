@@ -17,7 +17,7 @@ class Cart extends Model
         'user_id',
         'product_id',
         'quantity',
-        'session_id'
+        
     ];
 
     public function user() {
@@ -28,8 +28,6 @@ class Cart extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function session() {
-        return $this->belongsTo(ShoppingSession::class);
-    }
+   
 
 }

@@ -32,5 +32,6 @@ Route::middleware('auth:sanctum')->get('/profile', function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cart', [CartController::class, 'index']);
     Route::post('/cart', [CartController::class, 'store']);
+    Route::post('/cart', [CartController::class, 'getSync']);
     Route::delete('/cart/{id}', [CartController::class, 'destroy']);
 });

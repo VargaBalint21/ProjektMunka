@@ -39,7 +39,6 @@ class CartController extends Controller
                 'user_id' => $user->id,
                 'product_id' => $item['id'],
                 'quantity' => $item['quantity'],
-                'shopping_session_id' => null,
             ]);
         }
 
