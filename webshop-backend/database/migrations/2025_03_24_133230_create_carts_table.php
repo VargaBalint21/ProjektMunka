@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('product_id')->constrained('products');
             $table->integer('quantity')->default(1);
-            $table->foreignId('session_id')->constrained('shopping_sessions');
+            $table->foreignId('shopping_session_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
