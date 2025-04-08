@@ -7,7 +7,7 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { setCartItems } = useOutletContext();
+  const { setCartItems } = useOutletContext(); // 🔁 csak ez lett hozzáadva
 
   useEffect(() => {
     axios.get('http://localhost:8000/api/products')
@@ -32,11 +32,13 @@ function Home() {
         headers: { Authorization: `Bearer ${token}` }
       });
 
+      // 🔁 Kosár frissítése a Layout számára
       const res = await axios.get("http://localhost:8000/api/cart", {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCartItems(res.data);
-      alert("Kosárhoz adva!");
+
+      
     } catch (err) {
       console.error("Nem sikerült a kosárba rakás", err);
     }

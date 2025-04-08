@@ -1,47 +1,39 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function CartPage() {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
-  const { setCartItems } = useOutletContext();
 
-  const loadCart = () => {
-    const token = localStorage.getItem("token");
-    axios.get("http://localhost:8000/api/cart", {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(res => {
-        setItems(res.data);
-        setCartItems(res.data);
-      })
-      .catch(() => {
-        setItems([]);
-        setCartItems([]);
-      });
-  };
-
+  // Kosár betöltése
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return navigate("/login");
-    loadCart();
+
+    axios.get("http://localhost:8000/api/cart", {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(res => setItems(res.data))
+    .catch(err => console.error("Hiba a kosár lekérésekor", err));
   }, [navigate]);
 
+  // Egy termék eltávolítása
   const handleRemove = async (id) => {
     const token = localStorage.getItem("token");
     await axios.delete(`http://localhost:8000/api/cart/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
-    loadCart();
+    setItems(items.filter(item => item.id !== id));
   };
 
+  // Teljes kosár ürítése
   const handleClear = async () => {
     const token = localStorage.getItem("token");
     await axios.post("http://localhost:8000/api/cart/clear", {}, {
       headers: { Authorization: `Bearer ${token}` }
     });
-    loadCart();
+    setItems([]);
   };
 
   return (
