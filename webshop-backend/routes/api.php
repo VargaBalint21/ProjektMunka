@@ -3,6 +3,8 @@
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -33,6 +35,19 @@ Route::middleware('auth:sanctum')->get('/profile', function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/cart', [CartController::class, 'index']);
     Route::post('/cart', [CartController::class, 'store']);
+    Route::put('/cart/{cart}', [CartController::class, 'update']);
     Route::delete('/cart/{cart}', [CartController::class, 'destroy']);
     Route::post('/cart/clear', [CartController::class, 'clear']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    // Megrendelés létrehozása
+    Route::post('/order', [OrderController::class, 'store']);
+
+    // Megrendelések listázása (pl. profil oldalon)
+    Route::get('/orders', [OrderController::class, 'index']);
+
+    // Fizetések lekérése rendeléshez (opcionális)
+    Route::get('/order/{order}/payment', [PaymentController::class, 'show']);
+   
 });

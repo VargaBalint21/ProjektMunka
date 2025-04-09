@@ -5,35 +5,77 @@ import { useNavigate } from "react-router-dom";
 function CartPage() {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
+  const [total, setTotal] = useState(0);
 
-  // Kosár betöltése
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return navigate("/login");
+  const token = localStorage.getItem("token");
 
+  const calculateTotal = (cartItems) => {
+    const total = cartItems.reduce((sum, item) => {
+      return sum + item.quantity * item.product.price;
+    }, 0);
+    setTotal(total);
+  };
+
+  const loadCart = () => {
     axios.get("http://localhost:8000/api/cart", {
       headers: { Authorization: `Bearer ${token}` }
     })
-    .then(res => setItems(res.data))
-    .catch(err => console.error("Hiba a kosár lekérésekor", err));
+      .then(res => {
+        setItems(res.data);
+        calculateTotal(res.data);
+      })
+      .catch(err => console.error("Hiba a kosár lekérésekor", err));
+  };
+
+  useEffect(() => {
+    if (!token) return navigate("/login");
+    loadCart();
   }, [navigate]);
 
-  // Egy termék eltávolítása
   const handleRemove = async (id) => {
-    const token = localStorage.getItem("token");
     await axios.delete(`http://localhost:8000/api/cart/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
-    setItems(items.filter(item => item.id !== id));
+    loadCart();
   };
 
-  // Teljes kosár ürítése
   const handleClear = async () => {
-    const token = localStorage.getItem("token");
     await axios.post("http://localhost:8000/api/cart/clear", {}, {
       headers: { Authorization: `Bearer ${token}` }
     });
-    setItems([]);
+    loadCart();
+  };
+
+  const increaseQuantity = async (item) => {
+    if (item.quantity >= item.product.stock) {
+      return alert("Nincs több raktáron!");
+    }
+
+    await axios.put(`http://localhost:8000/api/cart/${item.id}`, {
+      quantity: item.quantity + 1
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    loadCart();
+  };
+
+  const decreaseQuantity = async (item) => {
+    if (item.quantity === 1) {
+      return handleRemove(item.id);
+    }
+
+    await axios.put(`http://localhost:8000/api/cart/${item.id}`, {
+      quantity: item.quantity - 1
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    loadCart();
+  };
+
+  const handleOrderRedirect = () => {
+    navigate("/order");
   };
 
   return (
@@ -45,14 +87,32 @@ function CartPage() {
         <>
           <ul className="list-group">
             {items.map(item => (
-              <li key={item.id} className="list-group-item d-flex justify-content-between">
+              <li key={item.id} className="list-group-item d-flex justify-content-between align-items-center">
                 <div>
-                  {item.product?.name} – {item.quantity} db
+                  <strong>{item.product?.name}</strong> — {item.quantity} db
+                  <br />
+                  <small className="text-muted">Max: {item.product?.stock} db</small>
                 </div>
-                <button className="btn btn-sm btn-danger" onClick={() => handleRemove(item.id)}>Törlés</button>
+                <div className="d-flex gap-2">
+                  <button className="btn btn-sm btn-secondary" onClick={() => decreaseQuantity(item)}>-</button>
+                  <button className="btn btn-sm btn-primary" onClick={() => increaseQuantity(item)}>+</button>
+                  <button className="btn btn-sm btn-danger" onClick={() => handleRemove(item.id)}>Törlés</button>
+                </div>
               </li>
             ))}
           </ul>
+
+          <div className="mt-3 text-end">
+            <h5>Végösszeg: <strong>{(total / 100).toFixed(2)} Ft</strong></h5>
+            <button
+              className="btn btn-success mt-2"
+              onClick={handleOrderRedirect}
+              disabled={items.length === 0}
+            >
+              Megrendelés leadása
+            </button>
+          </div>
+
           <button className="btn btn-warning mt-3" onClick={handleClear}>Kosár ürítése</button>
         </>
       )}

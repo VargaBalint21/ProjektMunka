@@ -65,4 +65,28 @@ class CartController extends Controller
 
         return response()->json(['message' => 'Kosár kiürítve']);
     }
+
+    public function update(Request $request, Cart $cart)
+{
+    $request->validate([
+        'quantity' => 'required|integer|min:1'
+    ]);
+
+    $user = Auth::user();
+
+    if ($cart->user_id !== $user->id) {
+        return response()->json(['error' => 'Nincs jogosultság'], 403);
+    }
+
+    $stock = $cart->product->stock;
+
+    if ($request->quantity > $stock) {
+        return response()->json(['error' => 'A kívánt mennyiség meghaladja a készletet.'], 400);
+    }
+
+    $cart->quantity = $request->quantity;
+    $cart->save();
+
+    return response()->json(['message' => 'Kosár frissítve']);
+}
 }
