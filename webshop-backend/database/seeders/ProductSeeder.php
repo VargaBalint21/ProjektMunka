@@ -98,6 +98,46 @@ class ProductSeeder extends Seeder
                 'image' => 'Cool_Pack_Hatizsag_Toby_Disney_Core_Stitch.jpg',
                 'category_id' => 2,
             ],
+            [
+                'name' => 'Parker Jotter golyóstoll, rozsdamentes acél',
+                'description' => 'Elegáns és megbízható golyóstoll rozsdamentes acél testtel és kék tintával.',
+                'price' => 5990,
+                'stock' => 10,
+                'image' => 'Parker_Jotter_golyostoll.jpg',
+                'category_id' => 3,
+            ],
+            [
+                'name' => 'Faber-Castell színes ceruza készlet, 24 darabos',
+                'description' => 'Prémium minőségű színes ceruzák élénk színekkel és könnyű hegyezhetőséggel.',
+                'price' => 3490,
+                'stock' => 30,
+                'image' => 'Faber_Castell_szines_ceruza.jpg',
+                'category_id' => 3,
+            ],
+            [
+                'name' => 'Stabilo Boss szövegkiemelő készlet, 4 darabos',
+                'description' => 'Klasszikus szövegkiemelők élénk színekben, hosszú élettartammal.',
+                'price' => 2490,
+                'stock' => 25,
+                'image' => 'Stabilo_Boss_szovegkiemelo.jpg',
+                'category_id' => 3,
+            ],
+            [
+                'name' => 'Sharpie filctoll készlet, 12 darabos',
+                'description' => 'Tartós és élénk színű filctollak, amelyek különböző felületeken is használhatók.',
+                'price' => 3990,
+                'stock' => 20,
+                'image' => 'Sharpie_filctoll_keszlet.jpg',
+                'category_id' => 3,
+            ],
+            [
+                'name' => 'Staedtler fém hegyező, dupla lyukú',
+                'description' => 'Kiváló minőségű fém hegyező, amely két különböző méretű ceruzához is alkalmas.',
+                'price' => 890,
+                'stock' => 50,
+                'image' => 'Staedtler_fem_hegyezo.jpg',
+                'category_id' => 3,
+            ],
         ];
 
         // Create products
