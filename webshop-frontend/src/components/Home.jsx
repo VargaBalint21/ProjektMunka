@@ -54,8 +54,8 @@ function Home() {
         {products.map(product => (
           <div className="col" key={product.id}>
             <div className="card h-100 shadow-sm">
-              <img
-                src={`http://localhost:8000/images/${product.image}`}
+            <img
+                src={product.image || 'https://placehold.co/300x200?text=Nincs+kép'}
                 className="card-img-top"
                 alt={product.name}
                 onError={(e) => { e.target.src = 'https://placehold.co/300x200?text=Nincs+kép'; }}

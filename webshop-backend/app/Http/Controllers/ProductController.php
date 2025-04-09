@@ -14,7 +14,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::all()->map(function ($product) {
+            $product->image = $product->image ? asset('storage/images/' . $product->image) : null;
+            return $product;
+        });
+
         return response()->json($products);
     }
 
@@ -31,7 +35,15 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $product = Product::create($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+            $data['image'] = $imagePath;
+        }
+
+        $product = Product::create($data);
+
         return response()->json([$product, 'msg' => "{$product->name} Product successfully created"]);
     }
 

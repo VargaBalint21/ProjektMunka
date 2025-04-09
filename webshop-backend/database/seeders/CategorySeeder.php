@@ -12,6 +12,14 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $categories = [
+            ['name' => 'Irodaszerek'],
+            ['name' => 'Iskolaszerek'],
+            ['name' => 'Írószerek'],
+        ];
+
+        foreach ($categories as $category) {
+            \App\Models\Category::create($category);
+        }
     }
 }
