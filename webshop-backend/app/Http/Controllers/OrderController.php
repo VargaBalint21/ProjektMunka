@@ -3,64 +3,65 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Http\Requests\StoreOrderRequest;
-use App\Http\Requests\UpdateOrderRequest;
+use App\Models\Payment;
+use App\Models\Cart;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $orders = Auth::user()->orders()->with('payment', 'items.product')->get();
+        return response()->json($orders);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'email' => 'required|email',
+            'phone' => 'nullable|string',
+            'street' => 'required|string',
+            'city' => 'required|string',
+            'state' => 'nullable|string',
+            'postal_code' => 'required|string',
+            'country' => 'required|string',
+            'payment_method' => 'required|in:cod,credit_card'
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreOrderRequest $request)
-    {
-        //
-    }
+        $user = Auth::user();
+        $cartItems = Cart::with('product')->where('user_id', $user->id)->get();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Order $order)
-    {
-        //
-    }
+        if ($cartItems->isEmpty()) {
+            return response()->json(['error' => 'A kosár üres'], 400);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Order $order)
-    {
-        //
-    }
+        $total = $cartItems->sum(fn($item) => $item->quantity * $item->product->price) / 100;
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateOrderRequest $request, Order $order)
-    {
-        //
-    }
+        $order = Order::create([
+            'user_id' => $user->id,
+            'total_amount' => $total,
+            'order_status' => 'pending'
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Order $order)
-    {
-        //
+        foreach ($cartItems as $item) {
+            $order->items()->create([
+                'product_id' => $item->product_id,
+                'quantity' => $item->quantity,
+                'price_at_purchase' => $item->product->price,
+            ]);
+        }
+
+        $order->payment()->create([
+            'payment_method' => $request->payment_method === 'credit_card' ? 'credit_card' : 'bank_transfer',
+            'payment_status' => 'pending',
+            'amount' => $total,
+        ]);
+
+        Cart::where('user_id', $user->id)->delete();
+
+        return response()->json(['message' => 'Rendelés sikeresen mentve']);
     }
 }
