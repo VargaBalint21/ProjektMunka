@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 function OrderPage() {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+  const { setCartItems } = useOutletContext(); 
 
   const [useExisting, setUseExisting] = useState(true);
   const [userData, setUserData] = useState({
@@ -22,8 +23,8 @@ function OrderPage() {
     country: ""
   });
 
-  const [cartItems, setCartItems] = useState([]);
-  const [paymentMethod, setPaymentMethod] = useState("cod"); // cod = utánvétel
+  const [cartItems, setLocalCartItems] = useState([]);
+  const [paymentMethod, setPaymentMethod] = useState("cod"); 
   const [cardData, setCardData] = useState({
     card_name: "",
     card_number: "",
@@ -34,7 +35,7 @@ function OrderPage() {
   useEffect(() => {
     if (!token) return;
 
-    // felhasználói adatok
+    // Felhasználói adatok
     axios.get("http://localhost:8000/api/profile", {
       headers: { Authorization: `Bearer ${token}` }
     })
@@ -48,14 +49,14 @@ function OrderPage() {
         });
       });
 
-    // kosár
+    // Kosár
     axios.get("http://localhost:8000/api/cart", {
       headers: { Authorization: `Bearer ${token}` }
     })
-      .then(res => setCartItems(res.data))
-      .catch(() => setCartItems([]));
+      .then(res => setLocalCartItems(res.data))
+      .catch(() => setLocalCartItems([]));
 
-    // cím
+    // Cím
     if (useExisting) {
       axios.get("http://localhost:8000/api/profile/address", {
         headers: { Authorization: `Bearer ${token}` }
@@ -93,7 +94,7 @@ function OrderPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const payload = {
       first_name: userData.first_name,
       last_name: userData.last_name,
@@ -112,18 +113,19 @@ function OrderPage() {
         cvc: cardData.cvc
       } : {})
     };
-  
+
     try {
       await axios.post("http://localhost:8000/api/order", payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       alert("Megrendelés sikeres!");
-  
-      // reset állapotok
+
+      
       setUserData({ first_name: "", last_name: "", email: "", phone: "" });
       setAddress({ street: "", city: "", state: "", postal_code: "", country: "" });
       setCardData({ card_name: "", card_number: "", expiry: "", cvc: "" });
-      setCartItems([]);
+      setLocalCartItems([]);
+      setCartItems([]); 
       navigate("/");
     } catch (err) {
       alert("Hiba a megrendelés elküldésekor.");

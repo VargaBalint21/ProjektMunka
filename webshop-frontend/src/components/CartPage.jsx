@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 function CartPage() {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [total, setTotal] = useState(0);
+  const { setCartItems } = useOutletContext(); 
 
   const token = localStorage.getItem("token");
 
@@ -23,6 +24,7 @@ function CartPage() {
       .then(res => {
         setItems(res.data);
         calculateTotal(res.data);
+        setCartItems(res.data); 
       })
       .catch(err => console.error("Hiba a kosár lekérésekor", err));
   };

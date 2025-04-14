@@ -47,10 +47,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // Megrendelés létrehozása
     Route::post('/order', [OrderController::class, 'store']);
 
-    // Megrendelések listázása (pl. profil oldalon)
+    // Megrendelések listázása 
     Route::get('/orders', [OrderController::class, 'index']);
 
-    // Fizetések lekérése rendeléshez (opcionális)
+    // Fizetések lekérése rendeléshez
     Route::get('/order/{order}/payment', [PaymentController::class, 'show']);
 
 });

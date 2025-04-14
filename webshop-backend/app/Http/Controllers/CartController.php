@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    // Visszaadja a bejelentkezett felhasználó kosarát
+   
     public function index()
     {
         $user = Auth::user();
@@ -16,7 +16,7 @@ class CartController extends Controller
         return response()->json($items);
     }
 
-    // Termék hozzáadása a kosárhoz
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -42,7 +42,7 @@ class CartController extends Controller
         return response()->json(['message' => 'Termék hozzáadva']);
     }
 
-    // Egy termék eltávolítása
+    
     public function destroy(Cart $cart)
     {
         $user = Auth::user();
@@ -56,7 +56,7 @@ class CartController extends Controller
         return response()->json(['message' => 'Termék törölve a kosárból']);
     }
 
-    // Teljes kosár törlése
+    
     public function clear()
     {
         $user = Auth::user();
