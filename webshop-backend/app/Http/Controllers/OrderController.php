@@ -47,6 +47,18 @@ class OrderController extends Controller
         ]);
 
         foreach ($cartItems as $item) {
+
+            $product = $item->product;
+
+            if ($product->stock < $item->quantity) {
+                return response()->json(['error' => 'Nincs elég készleten a(z) ' . $product->name . ' termékből.'], 400);
+            }
+
+            $product->stock -= $item->quantity;
+            $product->save();
+
+
+
             $order->items()->create([
                 'product_id' => $item->product_id,
                 'quantity' => $item->quantity,
