@@ -20,7 +20,11 @@ class ProductController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        $products = $query->get()->map(function ($product) {
+        // Paginálás: 9 terméket adunk vissza oldalanként
+        $products = $query->paginate(9);
+
+        // A képek elérhetősége
+        $products->getCollection()->transform(function ($product) {
             $product->image = $product->image ? asset('storage/images/' . $product->image) : null;
             return $product;
         });

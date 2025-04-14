@@ -10,6 +10,8 @@ function Home() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [page, setPage] = useState(1); // Kezdő oldal
+  const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
   const location = useLocation();
   const { setCartItems } = useOutletContext();
@@ -19,21 +21,22 @@ function Home() {
 
   useEffect(() => {
     setLoading(true);
-    let url = 'http://localhost:8000/api/products';
+    let url = `http://localhost:8000/api/products?page=${page}`;
     if (categoryId) {
-      url += `?category_id=${categoryId}`;
+      url += `&category_id=${categoryId}`;
     }
 
     axios.get(url)
       .then(response => {
-        setProducts(Array.isArray(response.data) ? response.data : []);
+        setProducts(response.data.data); // A termékek tömbje
+        setTotalPages(response.data.last_page); // Az összes oldal száma
         setLoading(false);
       })
       .catch(() => {
         setError('A termékek betöltése nem sikerült.');
         setLoading(false);
       });
-  }, [categoryId]);
+  }, [page, categoryId]); // Minden oldal váltáskor új adatokat tölt be
 
   const handleAddToCart = async (productId) => {
     const token = localStorage.getItem("token");
@@ -108,6 +111,27 @@ function Home() {
             </Grid>
         ))}
       </Grid>
+
+      {/* Oldal navigáció */}
+      <Box display="flex" justifyContent="center" sx={{ mt: 4 }}>
+        <Button
+          variant="outlined"
+          onClick={() => setPage(prev => Math.max(prev - 1, 1))}
+          disabled={page === 1}
+        >
+          Előző
+        </Button>
+        <Box sx={{ mx: 2, display: 'flex', alignItems: 'center' }}>
+          <Typography>{page} / {totalPages}</Typography>
+        </Box>
+        <Button
+          variant="outlined"
+          onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
+          disabled={page === totalPages}
+        >
+          Következő
+        </Button>
+      </Box>
     </Container>
   );
 }

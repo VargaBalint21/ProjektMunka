@@ -1,3 +1,4 @@
 backend-terminálba -> composer i -> npm i -> php artisan migrate:fresh --seed -> php artisan serve
-frontend-terminálba -> npm -> npm i react-router-dom -> npm i bootstrap -> npm run build -> npm run dev
+frontend-terminálba -> npm -> npm i react-router-dom -> npm i bootstrap -> npm install @mui/material @emotion/react @emotion/styled
+npm install @mui/icons-material -> npm run build -> npm run dev
 Igy hoztam létre a magyar validációt: composer require laravel-lang/lang --dev -> php artisan lang:add hu
