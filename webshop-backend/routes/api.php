@@ -6,6 +6,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +16,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::resource('/products', ProductController::class);
+
+Route::get('/categories', [CategoryController::class, 'index']);
 
 Route::get('/users', function () {
     $users = User::all();
@@ -49,5 +52,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Fizetések lekérése rendeléshez (opcionális)
     Route::get('/order/{order}/payment', [PaymentController::class, 'show']);
-   
+
 });

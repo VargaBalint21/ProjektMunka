@@ -12,9 +12,15 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::all()->map(function ($product) {
+        $query = Product::query();
+
+        if ($request->has('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        $products = $query->get()->map(function ($product) {
             $product->image = $product->image ? asset('storage/images/' . $product->image) : null;
             return $product;
         });
