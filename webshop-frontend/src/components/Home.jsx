@@ -4,7 +4,8 @@ import { useNavigate, useOutletContext, useLocation } from 'react-router-dom';
 import {
   Grid, Card, CardContent, Typography, Button,
   Container, CircularProgress, Alert, Box,
-  Select, MenuItem, InputLabel, FormControl
+  Select, MenuItem, InputLabel, FormControl, useMediaQuery, useTheme,
+  CardActionArea
 } from '@mui/material';
 
 function Home() {
@@ -15,6 +16,8 @@ function Home() {
   const navigate = useNavigate();
   const location = useLocation();
   const { setCartItems } = useOutletContext();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const queryParams = new URLSearchParams(location.search);
   const categoryId = queryParams.get('category_id');
@@ -85,13 +88,24 @@ function Home() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 5 }}>
-      <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
+    <Container maxWidth="lg" sx={{ py: isMobile ? 2 : 5, px: isMobile ? 1 : 2 }}>
+      <Typography 
+        variant={isMobile ? "h5" : "h4"} 
+        align="center" 
+        fontWeight="bold" 
+        gutterBottom
+        sx={{ mt: isMobile ? 1 : 2 }}
+      >
         Termékeink
       </Typography>
 
-      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
-        <FormControl size="small" sx={{ minWidth: 200 }}>
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        mb: isMobile ? 2 : 3,
+        width: '100%' 
+      }}>
+        <FormControl size="small" sx={{ minWidth: isMobile ? '80%' : 200 }}>
           <InputLabel id="sort-label">Rendezés ár szerint</InputLabel>
           <Select
             labelId="sort-label"
@@ -106,57 +120,129 @@ function Home() {
         </FormControl>
       </Box>
 
-      <Grid container spacing={4}>
+      <Grid container spacing={isMobile ? 2 : 4} justifyContent="center">
         {sortedProducts.map((product, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
+          <Grid 
+            item 
+            xs={6} 
+            sm={6} 
+            md={4} 
+            lg={3} 
+            key={product.id}
+            sx={{
+              display: 'flex',
+              justifyContent: 'center'
+            }}
+          >
             <Card sx={{
-              height: '100%',
+              height: isMobile ? 320 : 440,
               display: 'flex',
               flexDirection: 'column',
               borderRadius: 2,
-              boxShadow: sortOrder === 'default' && index < 3 ? 6 : 3,
-              border: sortOrder === 'default' && index < 3 ? '2px solid #eb6816' : undefined,
+              boxShadow: sortOrder === 'default' && index < 3 && !categoryId ? 6 : 3,
+              border: sortOrder === 'default' && index < 3 && !categoryId ? '2px solid #eb6816' : undefined,
               transition: 'transform 0.2s',
               '&:hover': {
-                transform: 'translateY(-5px)',
+                transform: isMobile ? 'none' : 'translateY(-5px)',
                 boxShadow: 6
               },
-              maxWidth: 300,
+              width: isMobile ? '100%' : '280px',
               margin: '0 auto'
             }}>
-              <Box sx={{
-                position: 'relative',
-                width: '100%',
-                paddingTop: '66.66%',
-                overflow: 'hidden',
-                borderTopLeftRadius: 8,
-                borderTopRightRadius: 8
-              }}>
-                <img
-                  src={product.image || 'https://placehold.co/400x300?text=Nincs+kép'}
-                  alt={product.name}
-                  onError={(e) => {
-                    e.target.src = 'https://placehold.co/400x300?text=Nincs+kép';
-                  }}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain'
-                  }}
-                />
-              </Box>
-              <CardContent sx={{ flexGrow: 1 }}>
-                <Typography variant="h6" gutterBottom>{product.name}</Typography>
-                <Typography variant="body2" color="text.secondary" gutterBottom>{product.description}</Typography>
-                <Typography variant="subtitle1" fontWeight="bold" color="primary">
-                  {(product.price / 100).toFixed(2)} Ft
-                </Typography>
-              </CardContent>
-              <Box px={2} pb={2}>
-                <Button variant="contained" fullWidth onClick={() => handleAddToCart(product.id)}>
+              <CardActionArea 
+                onClick={() => navigate(`/product/${product.id}`)}
+                sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}
+              >
+                <Box sx={{
+                  width: '100%',
+                  height: isMobile ? 140 : 200,
+                  overflow: 'hidden',
+                  borderTopLeftRadius: 8,
+                  borderTopRightRadius: 8,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  bgcolor: '#f5f5f5'
+                }}>
+                  <img
+                    src={product.image || 'https://placehold.co/400x300?text=Nincs+kép'}
+                    alt={product.name}
+                    onError={(e) => {
+                      e.target.src = 'https://placehold.co/400x300?text=Nincs+kép';
+                    }}
+                    style={{
+                      maxWidth: '90%',
+                      maxHeight: '90%',
+                      objectFit: 'contain',
+                      padding: '8px'
+                    }}
+                  />
+                </Box>
+                <CardContent sx={{ 
+                  flexGrow: 1, 
+                  padding: isMobile ? '8px 12px' : '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  width: '100%',
+                  height: 'auto',
+                  minHeight: isMobile ? '120px' : '160px',
+                }}>
+                  <Typography 
+                    variant={isMobile ? "subtitle1" : "h6"} 
+                    gutterBottom 
+                    sx={{
+                      fontSize: isMobile ? '0.9rem' : undefined,
+                      lineHeight: isMobile ? 1.2 : 1.4,
+                      mb: 1,
+                      height: isMobile ? '2.4rem' : '3.8rem',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      wordBreak: 'break-word'
+                    }}
+                  >
+                    {product.name}
+                  </Typography>
+                  <Typography 
+                    variant="body2" 
+                    color="text.secondary" 
+                    sx={{
+                      display: isMobile ? 'none' : '-webkit-box', 
+                      fontSize: isMobile ? '0.75rem' : undefined,
+                      mb: 2,
+                      flexGrow: 1,
+                      maxHeight: '2.4rem',
+                      lineHeight: '1.2rem',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                    }}
+                  >
+                    {product.description}
+                  </Typography>
+                  <Typography 
+                    variant="subtitle1" 
+                    fontWeight="bold" 
+                    color="primary"
+                    sx={{ 
+                      fontSize: isMobile ? '0.9rem' : undefined,
+                      mt: 'auto'
+                    }}
+                  >
+                    {product.price.toLocaleString('hu-HU')} Ft
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+              <Box px={isMobile ? 1 : 2} pb={isMobile ? 1 : 2} width="100%">
+                <Button 
+                  variant="contained" 
+                  fullWidth 
+                  onClick={() => handleAddToCart(product.id)}
+                  size={isMobile ? "small" : "medium"}
+                >
                   Kosárba
                 </Button>
               </Box>

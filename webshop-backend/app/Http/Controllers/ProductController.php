@@ -56,9 +56,14 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show(string $id)
     {
+        $product = Product::findOrFail($id);
+        if ($product->image) {
+            $product->image = asset('storage/images/' . $product->image);
+        }
 
+        return response()->json($product);
     }
 
     /**
