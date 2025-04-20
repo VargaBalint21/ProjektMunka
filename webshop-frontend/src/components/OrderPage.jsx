@@ -20,7 +20,7 @@ function OrderPage() {
     city: "",
     state: "",
     postal_code: "",
-    country: ""
+    country: "Magyarország"
   });
 
   const [cartItems, setLocalCartItems] = useState([]);
@@ -31,6 +31,15 @@ function OrderPage() {
     expiry: "",
     cvc: ""
   });
+
+  const countries = [
+    'Magyarország', 'Ausztria', 'Belgium', 'Bulgária', 'Ciprus', 
+    'Csehország', 'Dánia', 'Észtország', 'Finnország', 'Franciaország', 
+    'Görögország', 'Horvátország', 'Hollandia', 'Írország', 'Lengyelország', 
+    'Lettország', 'Litvánia', 'Luxemburg', 'Málta', 'Németország', 
+    'Olaszország', 'Portugália', 'Románia', 'Spanyolország', 'Svédország', 
+    'Szlovákia', 'Szlovénia', 'Egyesült Királyság'
+  ];
 
   useEffect(() => {
     if (!token) return;
@@ -76,7 +85,7 @@ function OrderPage() {
         city: "",
         state: "",
         postal_code: "",
-        country: ""
+        country: "Magyarország"
       });
     }
   }, [useExisting]);
@@ -190,7 +199,19 @@ function OrderPage() {
         </div>
         <div className="mb-3">
           <label>Ország</label>
-          <input type="text" name="country" className="form-control" value={address.country} onChange={handleChange} required />
+          <select 
+            name="country" 
+            className="form-select" 
+            value={address.country} 
+            onChange={handleChange} 
+            required
+          >
+            {countries.map(country => (
+              <option key={country} value={country}>
+                {country}
+              </option>
+            ))}
+          </select>
         </div>
 
         <h5 className="mt-4">Fizetési mód</h5>
