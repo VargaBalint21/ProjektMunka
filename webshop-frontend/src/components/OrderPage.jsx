@@ -251,12 +251,12 @@ function OrderPage() {
           {cartItems.map(item => (
             <li key={item.id} className="list-group-item d-flex justify-content-between">
               {item.product.name} – {item.quantity} db
-              <span>{(item.quantity * item.product.price / 100).toFixed(2)} Ft</span>
+              <span>{(item.quantity * item.product.price)} Ft</span>
             </li>
           ))}
         </ul>
 
-        <h6 className="text-end">Végösszeg: {(total / 100).toFixed(2)} Ft</h6>
+        <h6 className="text-end">Végösszeg: {(total)} Ft</h6>
 
         <button type="submit" className="btn btn-primary mt-3">Megrendelés elküldése</button>
       </form>

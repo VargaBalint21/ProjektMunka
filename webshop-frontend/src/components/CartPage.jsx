@@ -105,7 +105,7 @@ function CartPage() {
           </ul>
 
           <div className="mt-3 text-end">
-            <h5>Végösszeg: <strong>{(total / 100).toFixed(2)} Ft</strong></h5>
+            <h5>Végösszeg: <strong>{(total)} Ft</strong></h5>
             <button
               className="btn btn-success mt-2"
               onClick={handleOrderRedirect}
