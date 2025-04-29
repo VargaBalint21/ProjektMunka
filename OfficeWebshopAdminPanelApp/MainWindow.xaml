@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="450" Width="800" Background="#f4f4f4">
     <Grid>
-        <Button Content="Add New Product" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Height="40" Background="#4CAF50" Foreground="White" FontWeight="Bold" BorderBrush="#388E3C" BorderThickness="1" Click="OnAddNewProductClick" Margin="0,20,0,10"/>
+        <Button Content="Új termék hozzáadása" HorizontalAlignment="Left" VerticalAlignment="Top" Width="200" Height="40" Background="#4CAF50" Foreground="White" FontWeight="Bold" BorderBrush="#388E3C" BorderThickness="1" Click="OnAddNewProductClick" Margin="0,20,0,10"/>
 
         <ListView x:Name="ProductsListView" ItemsSource="{Binding Products}" SelectedItem="{Binding SelectedProduct, Mode=TwoWay}" Margin="0,70,0,0">
             <ListView.ItemContainerStyle>
@@ -13,9 +13,9 @@
             </ListView.ItemContainerStyle>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="150"/>
-                    <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price, StringFormat='{}{0:C}'}" Width="100"/>
-                    <GridViewColumn Header="Description" Width="300">
+                    <GridViewColumn Header="Termék neve" DisplayMemberBinding="{Binding Name}" Width="150"/>
+                    <GridViewColumn Header="Ár" DisplayMemberBinding="{Binding Price, StringFormat='{}{0:N0} Ft'}" Width="100"/>
+                    <GridViewColumn Header="Leírás" Width="300">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
