@@ -185,7 +185,6 @@ function RegisterForm() {
                     required 
                     placeholder="pelda@email.com"
                   />
-                  <small className="form-text text-muted">Erre az email címre küldjük a visszaigazolásokat.</small>
                 </div>
 
                 <div className="mb-3">
